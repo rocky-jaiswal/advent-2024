@@ -1,0 +1,12 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts",
+    "test": "deno run jest"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  },
+  "fmt": {
+    "singleQuote": true
+  }
+}
