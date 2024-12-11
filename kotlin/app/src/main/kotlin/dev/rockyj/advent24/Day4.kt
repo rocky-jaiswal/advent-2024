@@ -13,8 +13,6 @@ fun main() {
 }
 
 private fun part1(matrix: List<List<Map<Pair<Int, Int>, String>>>) {
-
-
     val matches = mutableListOf<String>()
     val allElems = matrix.flatten().reduce { acc, map -> acc.plus(map) }
 

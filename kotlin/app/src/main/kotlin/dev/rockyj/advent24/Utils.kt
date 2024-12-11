@@ -1,9 +1,12 @@
 package dev.rockyj.advent24
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import java.io.File
 import java.time.Instant
+import java.util.concurrent.Executors
+
+val Dispatchers.Virtual: CoroutineDispatcher
+    get() = Executors.newVirtualThreadPerTaskExecutor().asCoroutineDispatcher()
 
 fun fileToArr(filePath: String): List<String> {
     val res = ClassLoader.getSystemClassLoader().getResource(filePath)
@@ -11,7 +14,7 @@ fun fileToArr(filePath: String): List<String> {
 }
 
 suspend fun <T, R> Iterable<T>.mapParallel(transform: (T) -> R): List<R> = coroutineScope {
-    map { async { transform(it) } }.map { it.await() }
+    map { async(Dispatchers.Virtual) { transform(it) } }.map { it.await() }
 }
 
 fun timed(function: () -> Unit) {
