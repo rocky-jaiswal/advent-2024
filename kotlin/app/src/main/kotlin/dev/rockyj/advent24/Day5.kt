@@ -13,7 +13,7 @@ fun main() {
 private fun findViolations(pagePair: Pair<Int, Int>, rules: List<Pair<Int, Int>>): Pair<Int, Int>? {
     val violation = rules
         .find { rule -> pagePair.first == rule.second && pagePair.second == rule.first }
-    
+
     return violation
 }
 
