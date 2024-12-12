@@ -60,6 +60,7 @@ private fun findPath(matrix: Map<Pair<Int, Int>, String>, width: Int, height: In
 
         if (matrix[pos] != "#") {
             if (visitedPosWithDirection.contains(Pair("${pos.first}X${pos.second}", direction))) {
+                // println(visitedPosWithDirection)
                 throw RuntimeException("is a loop!")
             }
 
@@ -83,7 +84,7 @@ private fun part2(matrix: Map<Pair<Int, Int>, String>, width: Int, height: Int):
     var loops = 0
 
     path.forEachIndexed { index, pair ->
-        if (index < path.size - 2) {
+        if (index != 0 && index < path.size - 1) {
             try {
                 val nm = matrix.toMutableMap()
                 nm[pair] = "#"
