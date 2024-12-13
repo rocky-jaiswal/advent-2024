@@ -27,6 +27,7 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+    implementation("net.objecthunter:exp4j:0.4.8")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
