@@ -10,7 +10,8 @@ fun main() {
     val res = contents.map { it.first().toLong() }
     val op = contents.map { it.get(1).trim().split(Regex("\\s")).map { l -> l.toInt() } }
 
-    println(part1(res, op).sum())
+    // println(part1(res, op).sum())
+    println(part2(res, op).sum())
 }
 
 fun <T> cartesianProduct(vararg lists: List<T>): List<List<T>> {
@@ -33,10 +34,19 @@ var specialMul: Operator = object : Operator("!", 2, true, Operator.PRECEDENCE_A
     }
 }
 
+var specialOp: Operator = object : Operator("|", 2, true, Operator.PRECEDENCE_ADDITION) {
+    override fun apply(values: DoubleArray): Double {
+        return "${values[0].toLong()}${values[1].toLong()}".toDouble()
+    }
+}
 
 private fun calculate(expr: String): Long {
     // println(expr.replace("*", "!"))
-    val result = ExpressionBuilder(expr.replace("*", "!")).operator(specialMul).build().evaluate()
+    val result = ExpressionBuilder(expr.replace("*", "!"))
+        .operator(specialMul)
+        .operator(specialOp)
+        .build()
+        .evaluate()
     // println(result)
     return result.toLong()
 }
@@ -45,6 +55,34 @@ private fun part1(res: List<Long>, operands: List<List<Int>>): List<Long> {
     return res.filterIndexed { idx, result ->
         val opNums = operands[idx]
         val opArray = (1..opNums.size-1).map{ _ -> listOf("+", "*") }.toTypedArray()
+        val ops = cartesianProduct(*opArray)
+        var isValid = false
+
+        ops.forEachIndexed { idx1, op ->
+            if (!isValid) {
+                val expr = mutableListOf<String>()
+                opNums.forEachIndexed { idx2, opNum ->
+                    if (idx2 < opNums.size - 1) {
+                        expr.plusAssign(opNum.toString())
+                        expr.plusAssign(ops[idx1][idx2])
+                    }
+                }
+                expr.plusAssign(opNums.last().toString())
+                val expr1 = (expr.joinToString(""))
+                if (calculate(expr1) == result) {
+                    isValid = true
+                }
+            }
+        }
+
+        return@filterIndexed isValid
+    }
+}
+
+private fun part2(res: List<Long>, operands: List<List<Int>>): List<Long> {
+    return res.filterIndexed { idx, result ->
+        val opNums = operands[idx]
+        val opArray = (1..opNums.size-1).map{ _ -> listOf("+", "*", "|") }.toTypedArray()
         val ops = cartesianProduct(*opArray)
         var isValid = false
 
